@@ -1,21 +1,52 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getTaskById, updateTask, deleteTask } from '@/lib/taskController'; // Adjust the path to your controller
+import { NextResponse } from 'next/server';
+import { getTaskById, updateTask, deleteTask } from '../../../../lib/taskController';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { taskId } = req.query as { taskId: string };
+// GET: Fetch a specific task by ID
+export async function GET(req: Request, { params }: { params: { taskId: string } }) {
+  const { taskId } = params;
 
-  switch (req.method) {
-    case 'GET':
-      await getTaskById(req, res, taskId);   // Fetch a specific task by ID
-      break;
-    case 'PATCH':
-      await updateTask(req, res, taskId);    // Update a task by ID
-      break;
-    case 'DELETE':
-      await deleteTask(req, res, taskId);    // Delete a task by ID
-      break;
-    default:
-      res.status(405).json({ message: 'Method Not Allowed' });
-      break;
+  try {
+    const task = await getTaskById(taskId);
+    
+    if (!task) {
+      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(task, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch task' }, { status: 500 });
+  }
+}
+
+// PATCH: Update a specific task by ID
+export async function PATCH(req: Request, { params }: { params: { taskId: string } }) {
+  const { taskId } = params;
+
+  try {
+    const body = await req.json();
+    const { title, description, dueDate, completed } = body;
+
+    const updatedTask = await updateTask(taskId, {
+      title,
+      description,
+      dueDate,
+      completed,
+    });
+
+    return NextResponse.json(updatedTask, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to update task' }, { status: 500 });
+  }
+}
+
+// DELETE: Delete a specific task by ID
+export async function DELETE(req: Request, { params }: { params: { taskId: string } }) {
+  const { taskId } = params;
+
+  try {
+    await deleteTask(taskId);
+    return NextResponse.json({ message: 'Task deleted successfully' }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete task' }, { status: 500 });
   }
 }
