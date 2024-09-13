@@ -1,19 +1,21 @@
-import prisma from '../../../../lib/prisma';
+import { NextResponse } from 'next/server';
+import { getLeaderboard } from '@/lib/socialController';
 
-export default async function handler(req:any, res:any) {
-  const users = await prisma.user.findMany({
-    orderBy: { points: 'desc' }, 
-    select: {
-      id: true,
-      name: true,
-      points: true, 
-    },
-  });
+// GET: Fetch leaderboard
+export async function GET() {
+  try {
+    const leaderboard = await getLeaderboard();
 
-  res.json(users.map((user, index) => ({
-    userId: user.id,
-    username: user.name,
-    rank: index + 1,
-    points: user.points,
-  })));
+    // Add rank to each user
+    const leaderboardWithRank = leaderboard.map((user, index) => ({
+      userId: user.id,
+      username: user.name,
+      rank: index + 1,
+      points: user.points,
+    }));
+
+    return NextResponse.json(leaderboardWithRank, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch leaderboard' }, { status: 500 });
+  }
 }
