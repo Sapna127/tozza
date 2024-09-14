@@ -1,22 +1,25 @@
-import prisma from '../../../../lib/prisma'
+import { NextResponse } from 'next/server';
+import { sendFriendInvite } from '../../../../lib/socialController';
 
-export default async function handler(req:any, res:any) {
-  const { inviterId, inviteeEmail } = req.body;
+// POST: Send a friend invite
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { inviterId, inviteeEmail } = body;
 
-  const invitee = await prisma.user.findUnique({
-    where: { email: inviteeEmail },
-  });
+    if (!inviterId || !inviteeEmail) {
+      return NextResponse.json({ error: 'Inviter ID and Invitee Email are required' }, { status: 400 });
+    }
 
-  if (!invitee) {
-    return res.status(404).json({ error: 'Invitee not found' });
+    const invite = await sendFriendInvite(inviterId, inviteeEmail);
+    
+    return NextResponse.json({
+      inviteId: invite.id,
+      status: 'sent',
+      sentAt: invite.createdAt,
+    }, { status: 201 });
+  } catch (error:any) {
+    console.log(error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  const invite = await prisma.friendInvite.create({
-    data: {
-      senderId: inviterId,
-      receiverId: invitee.id,
-    },
-  });
-
-  res.json(invite);
 }

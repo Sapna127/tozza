@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-
+import { claimReward } from '../../../../lib/rewardController';
 // PATCH: Claim a specific reward by ID
 export async function PATCH(req: Request, { params }: { params: { rewardId: string } }) {
   const { rewardId } = params;
@@ -14,7 +14,7 @@ export async function PATCH(req: Request, { params }: { params: { rewardId: stri
 
     const reward = await claimReward(rewardId, userId);
     return NextResponse.json(reward, { status: 200 });
-  } catch (error) {
+  } catch (error:any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
