@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getTaskById, updateTask, deleteTask } from '../../../../lib/taskController';
+import { getTaskById, completeTask, deleteTask } from '../../../../lib/taskController';
 
 // GET: Fetch a specific task by ID
 export async function GET(req: Request, { params }: { params: { taskId: string } }) {
@@ -26,7 +26,7 @@ export async function PATCH(req: Request, { params }: { params: { taskId: string
     const body = await req.json();
     const { title, description, dueDate, completed } = body;
 
-    const updatedTask = await updateTask(taskId, {
+    const updatedTask = await completeTask(taskId, {
       title,
       description,
       dueDate,
@@ -35,6 +35,7 @@ export async function PATCH(req: Request, { params }: { params: { taskId: string
 
     return NextResponse.json(updatedTask, { status: 200 });
   } catch (error) {
+    // console.log(error);
     return NextResponse.json({ error: 'Failed to update task' }, { status: 500 });
   }
 }
@@ -50,3 +51,4 @@ export async function DELETE(req: Request, { params }: { params: { taskId: strin
     return NextResponse.json({ error: 'Failed to delete task' }, { status: 500 });
   }
 }
+

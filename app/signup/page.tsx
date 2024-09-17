@@ -1,5 +1,12 @@
-import { Signup } from "@/components/Signup"
+"use client"
 
-export default function() {
-    return <Signup />
+import { useSession } from "next-auth/react";
+
+export default function Signup() {
+  const session = useSession();
+  return (
+    <div>
+      {JSON.stringify(session.data?.user)}
+    </div>
+  );
 }
