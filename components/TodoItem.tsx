@@ -1,12 +1,12 @@
 "use client";
 import { useState } from 'react';
 
-const flowers = ['🌱', '🌷', '🌼', '🌻'];
-const todos = ['First todo', 'Second todo', 'Third todo', 'Fourth todo'];
+const flowers = ['🌱', '🌷', '🌼', '🌻','🌸','🪻'];
+const todos = ['First todo', 'Second todo', 'Third todo', 'Fourth todo', 'Fifth todo', 'sixth todo'];
 
 const TodoItem: React.FC = () => {
   const [currentTodoIndex, setCurrentTodoIndex] = useState(0);
-  const [checkedCount, setCheckedCount] = useState(0);
+  const [checkedCount, setCheckedCount] = useState(2);
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
@@ -20,8 +20,8 @@ const TodoItem: React.FC = () => {
 
       setTimeout(() => {
         setCurrentTodoIndex((prevIndex) => prevIndex + 1);
-        setIsChecked(false); // Reset checkbox
-      }, 1000); // Delay to allow the animation and sound to play
+        setIsChecked(false); 
+      }, 1000); 
     }
   };
 
@@ -33,7 +33,6 @@ const TodoItem: React.FC = () => {
       const confetti = document.createElement('div');
       confetti.className = 'confetti';
 
-      // Randomize color
       confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
       // Randomize position
@@ -55,7 +54,7 @@ const TodoItem: React.FC = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100'>
+    <div className='flex flex-col items-center justify-center min-h-screen p-4'>
       {currentTodoIndex < todos.length ? (
         <div className="flex w-[500px] justify-between p-4 border rounded-lg shadow-md mb-4">
           <span className="text-lg">
@@ -75,7 +74,7 @@ const TodoItem: React.FC = () => {
         <div className="p-4 text-lg text-center">All todos are completed!</div>
       )}
 
-      <div className='grid grid-cols-4 gap-2 mt-4'>
+      <div className='grid grid-cols-6 gap-2 mt-4'>
         {flowers.slice(0, checkedCount).map((flower, index) => (
           <div key={index} className="flex items-center justify-center w-16 h-16 border rounded-md">
             <span className="text-2xl">{flower}</span>
