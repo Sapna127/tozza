@@ -1,5 +1,3 @@
-
-import { Appbar } from "@/components/Appbar";
 import Navbar from "@/components/Navbar";
 import TodoItem from "@/components/TodoItem";
 
