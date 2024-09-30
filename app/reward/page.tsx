@@ -1,6 +1,5 @@
 'use client'
 
-import Sidebar from '@/components/Sidebar';
 import { useEffect, useState } from 'react';
 
 type Reward = {
@@ -54,50 +53,52 @@ const RewardsPage = ({ userId }: Props) => {
 
   return (
     <>
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Rewards</h1>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-4">Claimed Rewards</h2>
-        {claimedRewards.length > 0 ? (
-          <ul className="list-disc pl-5">
-            {claimedRewards.map((reward) => (
-              <li key={reward.id} className="mb-2">
-                <div className="flex justify-between items-center">
-                  <span>{reward.name}</span>
-                  <span className="text-sm text-green-500">Claimed</span>
-                </div>
-                <p className="text-gray-500">Points: {reward.points}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No claimed rewards yet.</p>
-        )}
-      </section>
-
-      {/* Unclaimed Rewards Section */}
-      <section className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Unclaimed Rewards</h2>
-        {unclaimedRewards.length > 0 ? (
-          <ul className="list-disc pl-5">
-            {unclaimedRewards.map((reward) => (
-              <li key={reward.id} className="mb-2">
-                <div className="flex justify-between items-center">
-                  <span>{reward.name}</span>
-                  <span className="text-sm text-red-500">Unclaimed</span>
-                </div>
-                <p className="text-gray-500">Points: {reward.points}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No unclaimed rewards available.</p>
-        )}
-      </section>
-    </div>
+      <div className="container mx-auto px-4 py-8 bg-white rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">🎉 Rewards</h1>
+  
+        {/* Claimed Rewards Section */}
+        <section>
+          <h2 className="text-2xl font-semibold mb-4 text-green-600">🏆 Claimed Rewards</h2>
+          {claimedRewards.length > 0 ? (
+            <ul className="list-none space-y-4">
+              {claimedRewards.map((reward) => (
+                <li key={reward.id} className="bg-gray-100 p-4 rounded-lg shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-medium">{reward.name}</span>
+                    <span className="text-sm text-green-500">✅ Claimed</span>
+                  </div>
+                  <p className="text-gray-500">Points: {reward.points} 🎯</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-gray-600 text-lg">No claimed rewards yet. 🚀</p>
+          )}
+        </section>
+  
+        {/* Unclaimed Rewards Section */}
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold mb-4 text-red-600">🎁 Unclaimed Rewards</h2>
+          {unclaimedRewards.length > 0 ? (
+            <ul className="list-none space-y-4">
+              {unclaimedRewards.map((reward) => (
+                <li key={reward.id} className="bg-gray-100 p-4 rounded-lg shadow-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-medium">{reward.name}</span>
+                    <span className="text-sm text-red-500">❌ Unclaimed</span>
+                  </div>
+                  <p className="text-gray-500">Points: {reward.points} 🎯</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-gray-600 text-lg">No unclaimed rewards available. 💡</p>
+          )}
+        </section>
+      </div>
     </>
   );
+  
 };
 
 export default RewardsPage;
