@@ -54,7 +54,7 @@ const RewardsPage = ({ userId }: Props) => {
   return (
     <>
       <div className="container mx-auto px-4 py-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">🎉 Rewards</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">🎉 Rewards</h1>
   
         {/* Claimed Rewards Section */}
         <section>

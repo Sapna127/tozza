@@ -2,7 +2,7 @@
 const Navbar = () => {
 
   return (
-<nav className="bg-gray-50 p-2 shadow-md fixed w-[600px] top-3 left-1/2 transform -translate-x-1/2 flex rounded-lg justify-center align-middle">
+<nav className="bg-gray-50 p-2 shadow-md fixed w-[600px] top-5 left-1/2 transform -translate-x-1/2 flex rounded-lg justify-center align-middle">
 <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
             <svg width="30" height="30" viewBox="0 0 64 65" fill="none" xmlns="http://www.w3.org/2000/svg">
