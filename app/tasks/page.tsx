@@ -22,15 +22,15 @@ const TasksPage = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
-  const [editTaskId, setEditTaskId] = useState<string | null>(null); // Track which task is being edited
-  const [userId, setUserId] = useState('ed5eac21-c7ae-4108-8907-730653ecef72');
+  const [editTaskId, setEditTaskId] = useState<string | null>(null);
+  const [userId] = useState('ed5eac21-c7ae-4108-8907-730653ecef72');
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const res = await fetch(`/api/tasks?userId=${userId}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks?userId=${userId}`);
+        if (!res.ok) throw new Error('Failed to fetch tasks');
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to fetch tasks');
         setTasks(data);
       } catch (error) {
         console.error(error);
@@ -43,31 +43,32 @@ const TasksPage = () => {
   }, [userId]);
 
   const handleCreateTask = async () => {
+    if (!title || !description || !dueDate) return; // Ensure all fields are filled
     try {
-      const res = await fetch('/api/tasks', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          title,
-          description,
-          dueDate,
-        }),
+        body: JSON.stringify({ userId, title, description, dueDate }),
       });
+      if (!res.ok) throw new Error('Failed to create task');
       const newTask = await res.json();
-      if (!res.ok) throw new Error(newTask.error || 'Failed to create task');
       setTasks([...tasks, newTask]);
-      setTitle('');
-      setDescription('');
-      setDueDate('');
+      resetForm();
     } catch (error) {
       console.error(error);
     }
   };
 
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setDueDate('');
+    setEditTaskId(null);
+  };
+
   const handleDeleteTask = async (taskId: string) => {
     try {
-      const res = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Failed to delete task');
       setTasks(tasks.filter((task) => task.id !== taskId));
     } catch (error) {
@@ -75,16 +76,16 @@ const TasksPage = () => {
     }
   };
 
-  const markComplete = async (taskId: string) => {
+  const markComplete = async (taskId: string, completed: boolean) => {
     try {
-      const res = await fetch(`/api/tasks/${taskId}`, { method: 'PATCH' });
-      const updatedTask = await res.json();
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed: !completed }), // Toggle completion
+      });
       if (!res.ok) throw new Error('Failed to mark complete');
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === taskId ? { ...task, completed: updatedTask.completed } : task
-        )
-      );
+      const updatedTask = await res.json();
+      setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId ? updatedTask : task)));
     } catch (error) {
       console.error(error);
     }
@@ -99,26 +100,15 @@ const TasksPage = () => {
 
   const handleSaveTask = async (taskId: string) => {
     try {
-      const res = await fetch(`/api/tasks/${taskId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          description,
-          dueDate,
-        }),
+        body: JSON.stringify({ title, description, dueDate }),
       });
-      const updatedTask = await res.json();
       if (!res.ok) throw new Error('Failed to update task');
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === taskId ? updatedTask : task
-        )
-      );
-      setEditTaskId(null);
-      setTitle('');
-      setDescription('');
-      setDueDate('');
+      const updatedTask = await res.json();
+      setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId ? updatedTask : task)));
+      resetForm();
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +117,7 @@ const TasksPage = () => {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-8 text-center">Your Tasks</h1>
-  
+
       {/* Task creation inputs */}
       <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
         <input
@@ -157,7 +147,7 @@ const TasksPage = () => {
           Create Task
         </button>
       </div>
-  
+
       {/* Task cards */}
       <ul className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {tasks.map((task) => (
@@ -195,7 +185,7 @@ const TasksPage = () => {
                 description={task.description || ''}
                 dueDate={formatDate(task.dueDate)}
                 completed={task.completed}
-                onToggleComplete={() => markComplete(task.id)}
+                onToggleComplete={() => markComplete(task.id, task.completed || false)} // Pass current completed status
                 onDelete={() => handleDeleteTask(task.id)}
                 onEdit={() => handleEditTask(task)}
               />
@@ -205,8 +195,6 @@ const TasksPage = () => {
       </ul>
     </div>
   );
-  
-  
 };
 
 export default TasksPage;

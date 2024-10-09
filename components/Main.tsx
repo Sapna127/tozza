@@ -33,7 +33,7 @@ export default function Main() {
               </button>
             </Link>            
             <button type="button" className="py-2.5 px-5 me-2 w-[400px] ">Already have an account</button>
-            <button onClick={() => signIn('google')}>Sign in with google</button>
+            {/* <button onClick={() => signIn('google')}>Sign in with google</button> */}
             </div>
           </div>
         </div>

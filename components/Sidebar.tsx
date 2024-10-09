@@ -20,7 +20,7 @@ export const Sidebar = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2m-4 0H7a2 2 0 01-2-2V10a2 2 0 012-2h6m0 12v-6m-6 0H5m10 0h2" />
                 </svg>
             } />
-            <button className="bg-red-600 py-2 px-6 rounded-md" onClick={() => signOut()}>Sign out</button>
+            {/* <button className="bg-red-600 py-2 px-6 rounded-md" onClick={() => signOut()}>Sign out</button> */}
         </div>
     );
 };

@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '../../../../lib/prisma';
+import { hash } from 'bcrypt';
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma'; 
 
-export async function POST(req: NextRequest) {
-  console.log('Received POST request');
+export async function POST(req: Request) {
   const { name, email, password } = await req.json();
 
   if (!name || !email || !password) {
@@ -18,11 +18,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
     }
 
+    const hashedPassword = await hash(password, 10);
+
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        password,
+        password: hashedPassword, 
       },
     });
 
@@ -31,9 +33,4 @@ export async function POST(req: NextRequest) {
     console.error('Error registering user:', error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
-}
-
-export async function GET(req: NextRequest) {
-  console.log('Received GET request');
-  return NextResponse.json({ message: 'Only POST requests are allowed' }, { status: 405 });
 }

@@ -8,7 +8,8 @@ function Home() {
   const {data:session} = useSession();
   return (
     <>
-     <Main/>
+     {!session && <Main/>}
+     {session && <TasksPage/>}
     </>
   )
 }
