@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createTask, getTasks } from '@/lib/taskController';
 
-// POST: Create a new task
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -9,7 +8,6 @@ export async function POST(req: Request) {
 
     console.log("create task called..");
 
-    // Convert dueDate to Date if it is a string
     const parsedDueDate = dueDate ? new Date(dueDate) : null;
 
     const task = await createTask(
@@ -21,12 +19,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json(task, { status: 201 });
   } catch (error) {
-    console.error(error); // Added logging for better error diagnosis
+    console.error(error); 
     return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
   }
 }
 
-// GET: Fetch tasks for a specific user
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
@@ -36,11 +33,10 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Reuse controller function to get tasks
     const tasks = await getTasks(userId);
     return NextResponse.json(tasks);
   } catch (error) {
-    console.error(error); // Added logging for better error diagnosis
+    console.error(error); 
     return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });
   }
 }

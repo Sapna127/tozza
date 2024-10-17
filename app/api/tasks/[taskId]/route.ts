@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getTaskById, updateTask, deleteTask } from '../../../../lib/taskController';
 
-// GET: Fetch a specific task by ID
 export async function GET(req: Request, { params }: { params: { taskId: string } }) {
   const { taskId } = params;
 
@@ -18,7 +17,6 @@ export async function GET(req: Request, { params }: { params: { taskId: string }
   }
 }
 
-// PATCH: Update a specific task by ID
 export async function PATCH(req: Request, { params }: { params: { taskId: string } }) {
   const { taskId } = params;
 
@@ -39,7 +37,6 @@ export async function PATCH(req: Request, { params }: { params: { taskId: string
   }
 }
 
-// DELETE: Delete a specific task by ID
 export async function DELETE(req: Request, { params }: { params: { taskId: string } }) {
   const { taskId } = params;
 
