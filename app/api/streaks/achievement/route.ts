@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/prisma'
 
-export default async function GET(req:any, res:any) {
+export const GET = (req:any, res:any) {
   try{
     const { userId } = req.query;
     const achievements = await prisma.achievement.findMany({
