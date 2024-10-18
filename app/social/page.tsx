@@ -9,7 +9,6 @@ interface LeaderboardUser {
 }
 
 const SocialPage = () => {
-//   const leaderboard = await getLeaderboard();
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
   const [error, setError] = useState<string | null>(null);
 

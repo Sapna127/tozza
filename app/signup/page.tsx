@@ -17,7 +17,6 @@ export default function Signup() {
       });
 
       if (response.status === 201) {
-        // Redirect to the /task page
         window.location.href = "/task";
       }
     } catch (error) {

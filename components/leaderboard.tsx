@@ -15,7 +15,6 @@ interface LeaderboardClientProps {
 const LeaderboardClient: React.FC<LeaderboardClientProps> = ({ leaderboard }) => {
   const [sortedLeaderboard, setSortedLeaderboard] = useState(leaderboard);
 
-  // Example of a simple client-side interaction: sorting
   const handleSort = () => {
     const sorted = [...sortedLeaderboard].sort((a, b) => b.points - a.points);
     setSortedLeaderboard(sorted);

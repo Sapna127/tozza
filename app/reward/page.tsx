@@ -10,28 +10,25 @@ type Reward = {
   createdAt: string;
 };
 
-type Props = {
-  userId: string;
-};
+// type Props = {
+//   userId: string;
+// };
 
-const RewardsPage = ({ userId }: Props) => {
+const RewardsPage = () => {
   const [claimedRewards, setClaimedRewards] = useState<Reward[]>([]);
   const [unclaimedRewards, setUnclaimedRewards] = useState<Reward[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch claimed and unclaimed rewards
   useEffect(() => {
     const fetchRewards = async () => {
       try {
         setLoading(true);
 
-        // Fetch claimed rewards
         const claimedResponse = await fetch(`/api/rewards?userId=${userId}`);
         const claimedData = await claimedResponse.json();
         if (!claimedResponse.ok) throw new Error(claimedData.error || 'Failed to fetch claimed rewards');
 
-        // Fetch unclaimed rewards
         const unclaimedResponse = await fetch(`/api/rewards?userId=${userId}`);
         const unclaimedData = await unclaimedResponse.json();
         if (!unclaimedResponse.ok) throw new Error(unclaimedData.error || 'Failed to fetch unclaimed rewards');
@@ -56,7 +53,6 @@ const RewardsPage = ({ userId }: Props) => {
       <div className="container mx-auto px-4 py-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-center">🎉 Rewards</h1>
   
-        {/* Claimed Rewards Section */}
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-green-600">🏆 Claimed Rewards</h2>
           {claimedRewards.length > 0 ? (
@@ -76,7 +72,6 @@ const RewardsPage = ({ userId }: Props) => {
           )}
         </section>
   
-        {/* Unclaimed Rewards Section */}
         <section className="mt-10">
           <h2 className="text-2xl font-semibold mb-4 text-red-600">🎁 Unclaimed Rewards</h2>
           {unclaimedRewards.length > 0 ? (
