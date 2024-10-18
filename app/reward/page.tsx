@@ -10,11 +10,11 @@ type Reward = {
   createdAt: string;
 };
 
-// type Props = {
-//   userId: string;
-// };
+type Props = {
+  userId: string;
+};
 
-const RewardsPage = () => {
+const RewardsPage = ({ userId }: Props) => {
   const [claimedRewards, setClaimedRewards] = useState<Reward[]>([]);
   const [unclaimedRewards, setUnclaimedRewards] = useState<Reward[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
