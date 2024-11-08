@@ -1,6 +1,5 @@
 import prisma from './prisma';
 
-// Fetch the leaderboard (sorted by points)
 export const getLeaderboard = async () => {
   try {
     return await prisma.user.findMany({
@@ -16,7 +15,6 @@ export const getLeaderboard = async () => {
   }
 };
 
-// Send a friend invite
 export const sendFriendInvite = async (inviterId: string, inviteeEmail: string) => {
   try {
     const invitee = await prisma.user.findUnique({
@@ -27,7 +25,6 @@ export const sendFriendInvite = async (inviterId: string, inviteeEmail: string) 
       throw new Error('Invitee not found');
     }
 
-    // Check if an invite already exists
     const existingInvite = await prisma.friendInvite.findFirst({
       where: {
         senderId: inviterId,
@@ -39,7 +36,6 @@ export const sendFriendInvite = async (inviterId: string, inviteeEmail: string) 
       throw new Error('Invite already sent');
     }
 
-    // Create a new friend invite
     const invite = await prisma.friendInvite.create({
       data: {
         senderId: inviterId,

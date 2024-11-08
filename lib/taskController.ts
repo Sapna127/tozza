@@ -1,7 +1,6 @@
 import { Task } from '@prisma/client';
 import prisma from './prisma'
 
-// Create a new task
 export const createTask = async (
   title: string,
   description: string | null,
@@ -23,7 +22,6 @@ export const createTask = async (
   }
 };
 
-// Fetch all tasks for a user
 export const getTasks = async (userId: string): Promise<Task[]> => {
   try {
     return await prisma.task.findMany({
@@ -35,7 +33,6 @@ export const getTasks = async (userId: string): Promise<Task[]> => {
   }
 };
 
-// Fetch a specific task by ID
 export const getTaskById = async (taskId: string): Promise<Task | null> => {
   try {
     return await prisma.task.findUnique({ where: { id: taskId } });
@@ -44,7 +41,6 @@ export const getTaskById = async (taskId: string): Promise<Task | null> => {
   }
 };
 
-// Update a task
 export const updateTask = async (
   taskId: string,
   data: Partial<{ title: string; description: string; dueDate: string; completed: boolean }>
@@ -62,7 +58,6 @@ export const updateTask = async (
   }
 };
 
-// Delete a task
 export const deleteTask = async (taskId: string): Promise<void> => {
   try {
     await prisma.task.delete({ where: { id: taskId } });

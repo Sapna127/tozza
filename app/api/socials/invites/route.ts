@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sendFriendInvite } from '../../../../lib/socialController';
 
-// POST: Send a friend invite
 export async function POST(req: Request) {
   try {
     const body = await req.json();

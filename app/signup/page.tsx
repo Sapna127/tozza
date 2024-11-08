@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function AuthPage() {
-  const [isSignup, setIsSignup] = useState(true); // Toggle between signup and signin
+  const [isSignup, setIsSignup] = useState(true); 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
