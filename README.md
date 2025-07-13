@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align = "center">
 
-## Getting Started
 
-First, run the development server:
+<h1 align="center"> <font size="5"> <b> ✅ Tozza </b></h1>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+![image](https://github.com/user-attachments/assets/c2bb5fd4-4207-4560-97a9-5cd9d852b916)
 
-## Learn More
+  </div>
 
-To learn more about Next.js, take a look at the following resources:
+  
+## Features and Functionality ✨
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Stay motivated with points, streaks, and leaderboards for completing tasks.
+* Earn rewards for consistency and high performance.
+* Invite friends to join your productivity circle.
+* Track each other’s task completion status in real time.
+* Encourage accountability and friendly competition.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+  
+## Technology Stack 👀
 
-## Deploy on Vercel
+*   **Next.js:** React framework for building the user interface.
+*   **Prisma:** ORM for database interactions.
+*   **PostgreSQL:** Database for storing user data, itineraries, and expenses.
+*   **Tailwind CSS:** CSS framework for styling.
+*   **Framer Motion:** Library for animations.
+*   **Lucide React:** Library for icons.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contact/Support Information 💌
+
+For questions or support, please contact [Sapna127](https://github.com/Sapna127).
