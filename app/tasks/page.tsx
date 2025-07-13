@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import TaskCard from '@/components/TaskCard';
+import { useEffect, useState } from "react";
+import TaskCard from "@/components/TaskCard";
+import { useSession } from "next-auth/react";
 
 interface Task {
   id: string;
@@ -12,45 +13,53 @@ interface Task {
 }
 
 const formatDate = (dateString?: string) => {
-  if (!dateString) return '';
+  if (!dateString) return "";
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-GB').format(date); // dd/mm/yyyy format
+  return new Intl.DateTimeFormat("en-GB").format(date); // dd/mm/yyyy format
 };
 
 const TasksPage = () => {
+  const { data: session } = useSession();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [editTaskId, setEditTaskId] = useState<string | null>(null);
-  const [userId] = useState('ed5eac21-c7ae-4108-8907-730653ecef72');
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks?userId=${userId}`);
-        if (!res.ok) throw new Error('Failed to fetch tasks');
-        const data = await res.json();
-        setTasks(data);
-      } catch (error) {
-        console.error(error);
-      }
+    // Only fetch userId if session and email exist
+    if (!session?.user?.email) return;
+    const fetchUserId = async () => {
+      if (!session.user) return;
+      const res = await fetch(`/api/user?email=${session.user.email}`);
+      const user = await res.json();
+      setUserId(user.id);
+      console.log("User ID fetched:", user.id);
     };
+    fetchUserId();
+  }, [session?.user?.email]);
 
-    if (userId) {
-      fetchTasks();
-    }
+  useEffect(() => {
+    if (!userId) return;
+    const fetchTasks = async () => {
+      const res = await fetch(`/api/tasks?userId=${userId}`);
+      const data = await res.json();
+      setTasks(data);
+    };
+    fetchTasks();
   }, [userId]);
 
   const handleCreateTask = async () => {
-    if (!title || !description || !dueDate) return; // Ensure all fields are filled
+    if (!title || !description || !dueDate || !userId) return; // Ensure all fields are filled
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(`/api/tasks`, {
+        // <-- add leading slash
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, title, description, dueDate }),
       });
-      if (!res.ok) throw new Error('Failed to create task');
+      if (!res.ok) throw new Error("Failed to create task");
       const newTask = await res.json();
       setTasks([...tasks, newTask]);
       resetForm();
@@ -60,16 +69,19 @@ const TasksPage = () => {
   };
 
   const resetForm = () => {
-    setTitle('');
-    setDescription('');
-    setDueDate('');
+    setTitle("");
+    setDescription("");
+    setDueDate("");
     setEditTaskId(null);
   };
 
   const handleDeleteTask = async (taskId: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete task');
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error("Failed to delete task");
       setTasks(tasks.filter((task) => task.id !== taskId));
     } catch (error) {
       console.error(error);
@@ -78,14 +90,19 @@ const TasksPage = () => {
 
   const markComplete = async (taskId: string, completed: boolean) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ completed: !completed }), // Toggle completion
-      });
-      if (!res.ok) throw new Error('Failed to mark complete');
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completed: !completed }), // Toggle completion
+        }
+      );
+      if (!res.ok) throw new Error("Failed to mark complete");
       const updatedTask = await res.json();
-      setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId ? updatedTask : task)));
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+      );
     } catch (error) {
       console.error(error);
     }
@@ -94,20 +111,25 @@ const TasksPage = () => {
   const handleEditTask = (task: Task) => {
     setEditTaskId(task.id);
     setTitle(task.title);
-    setDescription(task.description || '');
-    setDueDate(task.dueDate || '');
+    setDescription(task.description || "");
+    setDueDate(task.dueDate || "");
   };
 
   const handleSaveTask = async (taskId: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, dueDate }),
-      });
-      if (!res.ok) throw new Error('Failed to update task');
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/tasks/${taskId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, description, dueDate }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update task");
       const updatedTask = await res.json();
-      setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId ? updatedTask : task)));
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === taskId ? updatedTask : task))
+      );
       resetForm();
     } catch (error) {
       console.error(error);
@@ -182,10 +204,12 @@ const TasksPage = () => {
             ) : (
               <TaskCard
                 title={task.title}
-                description={task.description || ''}
+                description={task.description || ""}
                 dueDate={formatDate(task.dueDate)}
                 completed={task.completed}
-                onToggleComplete={() => markComplete(task.id, task.completed || false)} // Pass current completed status
+                onToggleComplete={() =>
+                  markComplete(task.id, task.completed || false)
+                } // Pass current completed status
                 onDelete={() => handleDeleteTask(task.id)}
                 onEdit={() => handleEditTask(task)}
               />

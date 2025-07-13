@@ -2,27 +2,31 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 export default function AuthPage() {
-  const [isSignup, setIsSignup] = useState(true); 
+  const [isSignup, setIsSignup] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const toggleAuthMode = () => {
     setIsSignup(!isSignup);
-    setName(""); 
+    setName("");
     setEmail("");
     setPassword("");
   };
 
   const handleSignup = async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/register`, {
-        name,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/register`,
+        {
+          name,
+          email,
+          password,
+        }
+      );
 
       if (response.status === 201) {
         window.location.href = "/task";
@@ -34,13 +38,15 @@ export default function AuthPage() {
 
   const handleSignin = async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user/login`, {
+      const result = await signIn("credentials", {
         email,
         password,
+        redirect: false, 
       });
-
-      if (response.status === 200) {
-        window.location.href = "/task";
+      if (result?.ok) {
+        window.location.href = "/task"; 
+      } else {
+        console.error("Signin failed", result?.error);
       }
     } catch (error) {
       console.error("Signin failed", error);
@@ -52,7 +58,9 @@ export default function AuthPage() {
       <div className="flex justify-center">
         <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
           <div className="px-10">
-            <div className="text-3xl font-extrabold">{isSignup ? "Sign Up" : "Sign In"}</div>
+            <div className="text-3xl font-extrabold">
+              {isSignup ? "Sign Up" : "Sign In"}
+            </div>
           </div>
           <div className="pt-2">
             {isSignup && (
@@ -82,7 +90,9 @@ export default function AuthPage() {
             </button>
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
+                {isSignup
+                  ? "Already have an account?"
+                  : "Don't have an account?"}{" "}
                 <span
                   onClick={toggleAuthMode}
                   className="text-blue-600 hover:underline cursor-pointer"
@@ -98,10 +108,17 @@ export default function AuthPage() {
   );
 }
 
-function LabelledInput({ label, placeholder, type, onChange }: LabelledInputType) {
+function LabelledInput({
+  label,
+  placeholder,
+  type,
+  onChange,
+}: LabelledInputType) {
   return (
     <div>
-      <label className="block mb-2 text-sm text-black font-semibold pt-4">{label}</label>
+      <label className="block mb-2 text-sm text-black font-semibold pt-4">
+        {label}
+      </label>
       <input
         onChange={onChange}
         type={type || "text"}
