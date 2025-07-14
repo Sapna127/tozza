@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createTask, getTasks } from '@/lib/taskController';
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: Request) {
   try {
