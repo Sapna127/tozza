@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createReward, claimReward, getUnclaimedRewards } from '../../../lib/rewardController';
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
