@@ -4,7 +4,7 @@ import {signOut} from 'next-auth/react';
 import Link from 'next/link';
 export const Sidebar = () => {
     return (
-        <div className="w-64 h-screen bg-gray-100 flex flex-col justify-between">
+        <div className="w-64 h-screen bg-gray-100 dark:bg-gray-900 dark:border-x-2 p-2 flex flex-col justify-between">
             <div className='flex-grow'>
                 <SidebarItem href="/tasks" title="Tasks" icon={
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
